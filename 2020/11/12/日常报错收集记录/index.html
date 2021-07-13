@@ -282,7 +282,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.1k</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -316,6 +316,13 @@
 <figure class="highlight dart"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandowWords</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">final</span> wordPair = <span class="keyword">new</span> WordPair.random();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Padding(</span><br><span class="line">        padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">8.0</span>),</span><br><span class="line">      child: <span class="keyword">new</span> Text(<span class="string">&#x27;随机字符串：<span class="subst">$&#123;wordPair.toString()&#125;</span>&#x27;</span>),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>RandowWords底部会提示<code>Typo:In word &#39;Randow&#39;</code>；此时是由于“随机”单词拼写错误，修改为Random就可以了。</p>
+<h2 id="3-hexo-报错"><a href="#3-hexo-报错" class="headerlink" title="3. hexo 报错"></a>3. hexo 报错</h2><figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">hexo s</span><br><span class="line"><span class="type">ERROR</span> <span class="type">Cannot</span> find module &#x27;hexo&#x27; from &#x27;<span class="operator">/</span><span class="type">Users</span><span class="operator">/</span>pv<span class="operator">/</span>myBlog<span class="operator">/</span>blog&#x27;</span><br><span class="line"><span class="type">ERROR</span> <span class="type">Local</span> hexo loading failed <span class="keyword">in</span> <span class="operator">~/</span>myBlog<span class="operator">/</span>blog</span><br><span class="line"><span class="type">ERROR</span> <span class="type">Try</span> running: &#x27;rm <span class="operator">-</span>rf node_modules <span class="operator">&amp;&amp;</span> npm install <span class="operator">--</span>force&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>只需要运行以下命令安装下就可以了</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">npm install hexo<span class="operator">-</span>util <span class="operator">--</span>save</span><br></pre></td></tr></table></figure>
+
+
+
 <hr>
 <blockquote>
 <p><strong>个人博客:</strong> 🏡 <a href="https://forgetsou.github.io/">ForgetSou</a></p>
@@ -490,7 +497,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-LGAlertView%E5%BA%93viewWillTransitionToSize%E5%B4%A9%E6%BA%83"><span class="nav-text">1.LGAlertView库viewWillTransitionToSize崩溃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Name-types-using-UpperCamelCase"><span class="nav-text">2. Name types using UpperCamelCase.</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-LGAlertView%E5%BA%93viewWillTransitionToSize%E5%B4%A9%E6%BA%83"><span class="nav-text">1.LGAlertView库viewWillTransitionToSize崩溃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Name-types-using-UpperCamelCase"><span class="nav-text">2. Name types using UpperCamelCase.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-hexo-%E6%8A%A5%E9%94%99"><span class="nav-text">3. hexo 报错</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
