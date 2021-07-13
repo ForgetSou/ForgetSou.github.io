@@ -348,7 +348,15 @@
   <entry>
     <title>iOS-ReactiveObjC的简单使用</title>
     <url>/2021/07/13/iOS-ReactiveObjC%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="一-简述"><a href="#一-简述" class="headerlink" title="一. 简述"></a>一. 简述</h1><h2 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h2><h1 id="二-示例"><a href="#二-示例" class="headerlink" title="二. 示例"></a>二. 示例</h1><h2 id="1-1"><a href="#1-1" class="headerlink" title="1."></a>1.</h2><hr>
+    <content><![CDATA[<h1 id="一-简述"><a href="#一-简述" class="headerlink" title="一. 简述"></a>一. 简述</h1><p><code>ReactiveObjC</code>(<a href="https://github.com/ReactiveCocoa/ReactiveObjC)%E4%BB%A5%E5%89%8D%E5%8F%88%E7%A7%B0%E4%B8%BA%60ReactiveCocoa%60%E6%88%96%60RAC%60%EF%BC%8C%E5%AE%83%E6%8F%90%E4%BE%9B%E4%BA%86%E7%94%A8%E4%BA%8E**%E7%BB%84%E5%90%88%E5%92%8C%E8%BD%AC%E6%8D%A2%E5%80%BC%E6%B5%81%E7%9A%84**API">https://github.com/ReactiveCocoa/ReactiveObjC)以前又称为`ReactiveCocoa`或`RAC`，它提供了用于**组合和转换值流的**API</a> 。</p>
+<p>源码: <a href="https://github.com/ReactiveCocoa/ReactiveObjC">https://github.com/ReactiveCocoa/ReactiveObjC</a></p>
+<h1 id="二-安装"><a href="#二-安装" class="headerlink" title="二. 安装"></a>二. 安装</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pod &#x27;ReactiveObjC&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<hr>
 <blockquote>
 <p><strong>个人博客:</strong> 🏡 <a href="https://forgetsou.github.io/">ForgetSou</a></p>
 </blockquote>
