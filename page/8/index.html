@@ -223,6 +223,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/27/macOS-NSToolBar/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/27/macOS-NSToolBar/" class="post-title-link" itemprop="url">macOS-NSToolBar</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-27 15:13:17" itemprop="dateCreated datePublished" datetime="2020-10-27T15:13:17+08:00">2020-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="NSToolBar"><a href="#NSToolBar" class="headerlink" title="NSToolBar"></a>NSToolBar</h1><h2 id="1-简述"><a href="#1-简述" class="headerlink" title="1 简述"></a>1 简述</h2><p>工具栏，用于管理窗口标题栏下方和应用程序的自定义内容上方的空间，以快速访问应用程序功能。</p>
+<h2 id="2-源码注解"><a href="#2-源码注解" class="headerlink" title="2 源码注解"></a>2 源码注解</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSToolbar</span> : <span class="title">NSObject</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-初始化创建"><a href="#2-1-初始化创建" class="headerlink" title="2.1 初始化创建"></a>2.1 <strong>初始化创建</strong></h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithIdentifier:(<span class="built_in">NSToolbarIdentifier</span>)identifier <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line">- (<span class="keyword">instancetype</span>)init API_AVAILABLE(macos(<span class="number">10.13</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-代理"><a href="#2-2-代理" class="headerlink" title="2.2 代理"></a>2.2 <strong>代理</strong></h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">weak</span>) <span class="keyword">id</span>&lt;<span class="built_in">NSToolbarDelegate</span>&gt; delegate;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">NSToolbarDelegate</span> &lt;<span class="title">NSObject</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@optional</span></span><br><span class="line">- (<span class="keyword">nullable</span> <span class="built_in">NSToolbarItem</span> *)toolbar:(<span class="built_in">NSToolbar</span> *)toolbar itemForItemIdentifier:(<span class="built_in">NSToolbarItemIdentifier</span>)itemIdentifier willBeInsertedIntoToolbar:(<span class="built_in">BOOL</span>)flag;</span><br><span class="line"><span class="comment">// 返回默认情况下在工具栏中显示的项目的有序列表。</span></span><br><span class="line">- (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSToolbarItemIdentifier</span>&gt; *)toolbarDefaultItemIdentifiers:(<span class="built_in">NSToolbar</span> *)toolbar;</span><br><span class="line"><span class="comment">// 按标识符返回所有允许项的列表。</span></span><br><span class="line">- (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSToolbarItemIdentifier</span>&gt; *)toolbarAllowedItemIdentifiers:(<span class="built_in">NSToolbar</span> *)toolbar;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@optional</span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSToolbarItemIdentifier</span>&gt; *)toolbarSelectableItemIdentifiers:(<span class="built_in">NSToolbar</span> *)toolbar;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)toolbarWillAddItem:(<span class="built_in">NSNotification</span> *)notification;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)toolbarDidRemoveItem:(<span class="built_in">NSNotification</span> *)notification;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-属性"><a href="#2-3-属性" class="headerlink" title="2.3 属性"></a>2.3 <strong>属性</strong></h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/27/macOS-NSToolBar/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/27/macOS-NSMenu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -311,107 +404,6 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/26/macOS-NSAlert/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/26/macOS-NSAlert/" class="post-title-link" itemprop="url">macOS-NSAlert</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-26 17:26:57" itemprop="dateCreated datePublished" datetime="2020-10-26T17:26:57+08:00">2020-10-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="macOS桌面开发NSAlert的使用"><a href="#macOS桌面开发NSAlert的使用" class="headerlink" title="macOS桌面开发NSAlert的使用"></a>macOS桌面开发NSAlert的使用</h1><h2 id="1-简述"><a href="#1-简述" class="headerlink" title="1 简述"></a>1 简述</h2><p>附加到窗口的模式对话框或工作表，可以定义标题，描述详情，图标，按钮等。</p>
-<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSAlert</span> : <span class="title">NSObject</span></span></span><br></pre></td></tr></table></figure>
-
-<p><code>NSAlert</code>总体分为两类：</p>
-<ul>
-<li><p>显示在应用程序中的提示框</p>
-<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)beginSheetModalForWindow:(<span class="built_in">NSWindow</span> *)sheetWindow completionHandler:(<span class="keyword">void</span> (^ _Nullable)(<span class="built_in">NSModalResponse</span> returnCode))handler API_AVAILABLE(macos(<span class="number">10.9</span>));</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>单个警报，应用程序外的提示框</p>
-<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">[alert runModal];</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="2-常用属性"><a href="#2-常用属性" class="headerlink" title="2 常用属性"></a>2 常用属性</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>) <span class="built_in">NSString</span> *messageText; <span class="comment">// 主要提示信息</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>) <span class="built_in">NSString</span> *informativeText;<span class="comment">// 其他提示信息</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">null_resettable</span>, <span class="keyword">strong</span>) <span class="built_in">NSImage</span> *icon; <span class="comment">// 自定义图标，不设置会使用系统默认图标 NSApplicationIcon</span></span><br><span class="line"><span class="comment">/*!</span></span><br><span class="line"><span class="comment">typedef NS_ENUM(NSUInteger, NSAlertStyle) &#123;</span></span><br><span class="line"><span class="comment">    NSAlertStyleWarning = 0,</span></span><br><span class="line"><span class="comment">    NSAlertStyleInformational = 1,</span></span><br><span class="line"><span class="comment">    NSAlertStyleCritical = 2</span></span><br><span class="line"><span class="comment">&#125;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">NSAlertStyle</span> alertStyle; </span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> showsHelp; <span class="comment">// 是否显示帮助锚点</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">copy</span>) <span class="built_in">NSHelpAnchorName</span> helpAnchor; <span class="comment">// 锚点内容</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> showsSuppressionButton API_AVAILABLE(macos(<span class="number">10.5</span>)); <span class="comment">// 是否显示复选框</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">readonly</span>, <span class="keyword">strong</span>) <span class="built_in">NSButton</span> *suppressionButton API_AVAILABLE(macos(<span class="number">10.5</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">strong</span>) <span class="built_in">NSView</span> *accessoryView API_AVAILABLE(macos(<span class="number">10.5</span>)); <span class="comment">// 附件信息</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-初始化"><a href="#3-初始化" class="headerlink" title="3 初始化"></a>3 初始化</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="built_in">NSAlert</span> *alert = [[<span class="built_in">NSAlert</span> alloc] init];</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/26/macOS-NSAlert/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
@@ -482,7 +474,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -582,7 +574,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:35</span>
+    <span title="站点阅读时长">3:36</span>
 </div>
 
         
