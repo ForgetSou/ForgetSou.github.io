@@ -223,6 +223,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/11/11/iOS%E5%BC%80%E5%8F%91-AudioUnit%E5%AE%9E%E6%97%B6%E5%BD%95%E9%9F%B3-OC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/11/iOS%E5%BC%80%E5%8F%91-AudioUnit%E5%AE%9E%E6%97%B6%E5%BD%95%E9%9F%B3-OC/" class="post-title-link" itemprop="url">iOS开发-AudioUnit实时录音(OC)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-11 15:52:54" itemprop="dateCreated datePublished" datetime="2020-11-11T15:52:54+08:00">2020-11-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-单声道录音"><a href="#1-单声道录音" class="headerlink" title="1.单声道录音"></a>1.单声道录音</h1><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  FSUnitRecorder.h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;AVFoundation/AVFoundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">NS_ASSUME_NONNULL_BEGIN</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> (^kAudioUnitRecorderOnputBlock)(AudioBufferList *bufferList);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FSUnitRecorder</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="keyword">double</span> sampleRate;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>) <span class="built_in">BOOL</span> isRecording;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) kAudioUnitRecorderOnputBlock bufferListBlock;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)start;</span><br><span class="line">- (<span class="keyword">void</span>)stop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">NS_ASSUME_NONNULL_END</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  FSUnitRecorder.m</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;FSUnitRecorder.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FSUnitRecorder</span> ()</span></span><br><span class="line">&#123;</span><br><span class="line">    AudioUnit audioUnit;</span><br><span class="line">    <span class="built_in">BOOL</span> audioComponentInitialized;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">assign</span>) AudioStreamBasicDescription inputStreamDesc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FSUnitRecorder</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">instancetype</span>)init &#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">            [<span class="keyword">self</span> defaultSetting];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)defaultSetting &#123;</span><br><span class="line">  <span class="comment">// 优先16000，如果设备不支持使用其它采样率</span></span><br><span class="line">    <span class="built_in">NSArray</span> *sampleRates = @[@<span class="number">16000</span>, @<span class="number">11025</span>, @<span class="number">22050</span>, @<span class="number">44100</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">NSNumber</span> *sampleRate <span class="keyword">in</span> sampleRates) &#123;</span><br><span class="line">        OSStatus status = [<span class="keyword">self</span> prepareRecord:sampleRate.doubleValue];</span><br><span class="line">        <span class="keyword">if</span> (status == noErr) &#123;</span><br><span class="line">            <span class="keyword">self</span>.sampleRate = [sampleRate doubleValue];</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (OSStatus)prepareRecord:(<span class="keyword">double</span>)sampleRate &#123;</span><br><span class="line">    OSStatus status = noErr;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSError</span> *error;</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setCategory:<span class="built_in">AVAudioSessionCategoryPlayAndRecord</span> withOptions:<span class="built_in">AVAudioSessionCategoryOptionMixWithOthers</span> | <span class="built_in">AVAudioSessionCategoryOptionAllowBluetooth</span>  error:&amp;error];</span><br><span class="line">    [[<span class="built_in">AVAudioSession</span> sharedInstance] setActive:<span class="literal">YES</span> error:&amp;error];</span><br><span class="line">  <span class="comment">// This doesn&#x27;t seem to really indicate a problem (iPhone 6s Plus)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> IGNORE</span></span><br><span class="line">    <span class="built_in">NSInteger</span> inputChannels = session.inputNumberOfChannels;</span><br><span class="line">    <span class="keyword">if</span> (!inputChannels) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;ERROR: NO AUDIO INPUT DEVICE&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!audioComponentInitialized) &#123;</span><br><span class="line">        audioComponentInitialized = <span class="literal">YES</span>;</span><br><span class="line">        <span class="comment">// Describe the RemoteIO unit</span></span><br><span class="line">        AudioComponentDescription audioComponentDescription;</span><br><span class="line">        audioComponentDescription.componentType = kAudioUnitType_Output;</span><br><span class="line">        audioComponentDescription.componentSubType = kAudioUnitSubType_RemoteIO;</span><br><span class="line">        audioComponentDescription.componentManufacturer = kAudioUnitManufacturer_Apple;</span><br><span class="line">        audioComponentDescription.componentFlags = <span class="number">0</span>;</span><br><span class="line">        audioComponentDescription.componentFlagsMask = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Get the RemoteIO unit</span></span><br><span class="line">        AudioComponent remoteIOComponent = AudioComponentFindNext(<span class="literal">NULL</span>,&amp;audioComponentDescription);</span><br><span class="line">        status = AudioComponentInstanceNew(remoteIOComponent,&amp;(<span class="keyword">self</span>-&gt;audioUnit));</span><br><span class="line">        <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t get RemoteIO unit instance&quot;</span>)) &#123;</span><br><span class="line">          <span class="keyword">return</span> status;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="built_in">UInt32</span> oneFlag = <span class="number">1</span>;</span><br><span class="line">      AudioUnitElement bus0 = <span class="number">0</span>;</span><br><span class="line">      AudioUnitElement bus1 = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> ((<span class="literal">NO</span>)) &#123;</span><br><span class="line">        <span class="comment">// Configure the RemoteIO unit for playback</span></span><br><span class="line">        status = AudioUnitSetProperty (<span class="keyword">self</span>-&gt;audioUnit,</span><br><span class="line">                                       kAudioOutputUnitProperty_EnableIO,</span><br><span class="line">                                       kAudioUnitScope_Output,</span><br><span class="line">                                       bus0,</span><br><span class="line">                                       &amp;oneFlag,</span><br><span class="line">                                       <span class="keyword">sizeof</span>(oneFlag));</span><br><span class="line">        <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t enable RemoteIO output&quot;</span>)) &#123;</span><br><span class="line">          <span class="keyword">return</span> status;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Configure the RemoteIO unit for input</span></span><br><span class="line">      status = AudioUnitSetProperty(<span class="keyword">self</span>-&gt;audioUnit,</span><br><span class="line">                                    kAudioOutputUnitProperty_EnableIO,</span><br><span class="line">                                    kAudioUnitScope_Input,</span><br><span class="line">                                    bus1,</span><br><span class="line">                                    &amp;oneFlag,</span><br><span class="line">                                    <span class="keyword">sizeof</span>(oneFlag));</span><br><span class="line">      <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t enable RemoteIO input&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      AudioStreamBasicDescription asbd;</span><br><span class="line">      memset(&amp;asbd, <span class="number">0</span>, <span class="keyword">sizeof</span>(asbd));</span><br><span class="line">      asbd.mSampleRate = sampleRate; <span class="comment">// 采样率</span></span><br><span class="line">      asbd.mFormatID = kAudioFormatLinearPCM;</span><br><span class="line">      asbd.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;</span><br><span class="line">      asbd.mBytesPerPacket = <span class="number">2</span>;</span><br><span class="line">      asbd.mFramesPerPacket = <span class="number">1</span>;</span><br><span class="line">      asbd.mBytesPerFrame = <span class="number">2</span>;</span><br><span class="line">      asbd.mChannelsPerFrame = <span class="number">2</span>;</span><br><span class="line">      asbd.mBitsPerChannel = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Set format for output (bus 0) on the RemoteIO&#x27;s input scope</span></span><br><span class="line">      status = AudioUnitSetProperty(<span class="keyword">self</span>-&gt;audioUnit,</span><br><span class="line">                                    kAudioUnitProperty_StreamFormat,</span><br><span class="line">                                    kAudioUnitScope_Input,</span><br><span class="line">                                    bus0,</span><br><span class="line">                                    &amp;asbd,</span><br><span class="line">                                    <span class="keyword">sizeof</span>(asbd));</span><br><span class="line">      <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t set the ASBD for RemoteIO on input scope/bus 0&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Set format for mic input (bus 1) on RemoteIO&#x27;s output scope</span></span><br><span class="line">      status = AudioUnitSetProperty(<span class="keyword">self</span>-&gt;audioUnit,</span><br><span class="line">                                    kAudioUnitProperty_StreamFormat,</span><br><span class="line">                                    kAudioUnitScope_Output,</span><br><span class="line">                                    bus1,</span><br><span class="line">                                    &amp;asbd,</span><br><span class="line">                                    <span class="keyword">sizeof</span>(asbd));</span><br><span class="line">      <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t set the ASBD for RemoteIO on output scope/bus 1&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Set the recording callback</span></span><br><span class="line">      AURenderCallbackStruct callbackStruct;</span><br><span class="line">      callbackStruct.inputProc = inputCallBackFun;</span><br><span class="line">      callbackStruct.inputProcRefCon = (__bridge <span class="keyword">void</span> *) <span class="keyword">self</span>;</span><br><span class="line">      status = AudioUnitSetProperty(<span class="keyword">self</span>-&gt;audioUnit,</span><br><span class="line">                                    kAudioOutputUnitProperty_SetInputCallback,</span><br><span class="line">                                    kAudioUnitScope_Global,</span><br><span class="line">                                    bus1,</span><br><span class="line">                                    &amp;callbackStruct,</span><br><span class="line">                                    <span class="keyword">sizeof</span> (callbackStruct));</span><br><span class="line">      <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t set RemoteIO&#x27;s render callback on bus 0&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> ((<span class="literal">NO</span>)) &#123;</span><br><span class="line">        <span class="comment">// Set the playback callback</span></span><br><span class="line">        AURenderCallbackStruct callbackStruct;</span><br><span class="line">        callbackStruct.inputProc = playbackCallback;</span><br><span class="line">        callbackStruct.inputProcRefCon = (__bridge <span class="keyword">void</span> *) <span class="keyword">self</span>;</span><br><span class="line">        status = AudioUnitSetProperty(<span class="keyword">self</span>-&gt;audioUnit,</span><br><span class="line">                                      kAudioUnitProperty_SetRenderCallback,</span><br><span class="line">                                      kAudioUnitScope_Global,</span><br><span class="line">                                      bus0,</span><br><span class="line">                                      &amp;callbackStruct,</span><br><span class="line">                                      <span class="keyword">sizeof</span> (callbackStruct));</span><br><span class="line">        <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t set RemoteIO&#x27;s render callback on bus 0&quot;</span>)) &#123;</span><br><span class="line">          <span class="keyword">return</span> status;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Initialize the RemoteIO unit</span></span><br><span class="line">      status = AudioUnitInitialize(<span class="keyword">self</span>-&gt;audioUnit);</span><br><span class="line">      <span class="keyword">if</span> (CheckError(status, <span class="string">&quot;Couldn&#x27;t initialize the RemoteIO unit&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)start &#123;</span><br><span class="line">    [<span class="keyword">self</span> deleteAudioFile];</span><br><span class="line">    CheckError(AudioOutputUnitStart(audioUnit), <span class="string">&quot;AudioOutputUnitStop failed&quot;</span>);</span><br><span class="line">    _isRecording = <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)stop &#123;</span><br><span class="line">    CheckError(AudioOutputUnitStop(audioUnit),</span><br><span class="line">    <span class="string">&quot;AudioOutputUnitStop failed&quot;</span>);</span><br><span class="line">    _isRecording = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)deleteAudioFile &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *pcmPath = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>).firstObject stringByAppendingPathComponent:<span class="string">@&quot;record.mp3&quot;</span>];</span><br><span class="line">    <span class="keyword">if</span> ([[<span class="built_in">NSFileManager</span> defaultManager] fileExistsAtPath:pcmPath]) &#123;</span><br><span class="line">        [[<span class="built_in">NSFileManager</span> defaultManager] removeItemAtPath:pcmPath error:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)dealloc &#123;</span><br><span class="line">    CheckError(AudioComponentInstanceDispose(audioUnit),</span><br><span class="line">               <span class="string">&quot;AudioComponentInstanceDispose failed&quot;</span>);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;UnitRecorder销毁&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> OSStatus CheckError(OSStatus error, <span class="keyword">const</span> <span class="keyword">char</span> *operation) &#123;</span><br><span class="line">  <span class="keyword">if</span> (error == noErr) &#123;</span><br><span class="line">    <span class="keyword">return</span> error;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">char</span> errorString[<span class="number">20</span>] = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="comment">// See if it appears to be a 4-char-code</span></span><br><span class="line">  *(<span class="built_in">UInt32</span> *)(errorString + <span class="number">1</span>) = <span class="built_in">CFSwapInt32HostToBig</span>(error);</span><br><span class="line">  <span class="keyword">if</span> (isprint(errorString[<span class="number">1</span>]) &amp;&amp; isprint(errorString[<span class="number">2</span>]) &amp;&amp;</span><br><span class="line">      isprint(errorString[<span class="number">3</span>]) &amp;&amp; isprint(errorString[<span class="number">4</span>])) &#123;</span><br><span class="line">    errorString[<span class="number">0</span>] = errorString[<span class="number">5</span>] = <span class="string">&#x27;\&#x27;&#x27;</span>;</span><br><span class="line">    errorString[<span class="number">6</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// No, format it as an integer</span></span><br><span class="line">    sprintf(errorString, <span class="string">&quot;%d&quot;</span>, (<span class="keyword">int</span>)error);</span><br><span class="line">  &#125;</span><br><span class="line">  fprintf(stderr, <span class="string">&quot;Error: %s (%s)\n&quot;</span>, operation, errorString);</span><br><span class="line">  <span class="keyword">return</span> error;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> OSStatus playbackCallback(<span class="keyword">void</span> *inRefCon,</span><br><span class="line">                                 AudioUnitRenderActionFlags *ioActionFlags,</span><br><span class="line">                                 <span class="keyword">const</span> AudioTimeStamp *inTimeStamp,</span><br><span class="line">                                 <span class="built_in">UInt32</span> inBusNumber,</span><br><span class="line">                                 <span class="built_in">UInt32</span> inNumberFrames,</span><br><span class="line">                                 AudioBufferList *ioData) &#123;</span><br><span class="line">  OSStatus status = noErr;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Notes: ioData contains buffers (may be more than one!)</span></span><br><span class="line">  <span class="comment">// Fill them up as much as you can. Remember to set the size value in each buffer to match how</span></span><br><span class="line">  <span class="comment">// much data is in the buffer.</span></span><br><span class="line">  FSUnitRecorder *recorder = (__bridge FSUnitRecorder *) inRefCon;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">UInt32</span> bus1 = <span class="number">1</span>;</span><br><span class="line">  status = AudioUnitRender(recorder-&gt;audioUnit,</span><br><span class="line">                           ioActionFlags,</span><br><span class="line">                           inTimeStamp,</span><br><span class="line">                           bus1,</span><br><span class="line">                           inNumberFrames,</span><br><span class="line">                           ioData);</span><br><span class="line">  CheckError(status, <span class="string">&quot;Couldn&#x27;t render from RemoteIO unit&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> OSStatus inputCallBackFun(<span class="keyword">void</span> *inRefCon,</span><br><span class="line">                    AudioUnitRenderActionFlags *ioActionFlags,</span><br><span class="line">                    <span class="keyword">const</span> AudioTimeStamp *inTimeStamp,</span><br><span class="line">                    <span class="built_in">UInt32</span> inBusNumber,</span><br><span class="line">                    <span class="built_in">UInt32</span> inNumberFrames,</span><br><span class="line">                    AudioBufferList * __<span class="keyword">nullable</span> ioData)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    FSUnitRecorder *recorder = (__bridge FSUnitRecorder *)(inRefCon);</span><br><span class="line">    </span><br><span class="line">    AudioBufferList bufferList;</span><br><span class="line">    bufferList.mNumberBuffers = <span class="number">1</span>;</span><br><span class="line">    bufferList.mBuffers[<span class="number">0</span>].mData = <span class="literal">NULL</span>;</span><br><span class="line">    bufferList.mBuffers[<span class="number">0</span>].mDataByteSize = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    AudioUnitRender(recorder-&gt;audioUnit,</span><br><span class="line">                    ioActionFlags,</span><br><span class="line">                    inTimeStamp,</span><br><span class="line">                    <span class="number">1</span>,</span><br><span class="line">                    inNumberFrames,</span><br><span class="line">                    &amp;bufferList);</span><br><span class="line">    <span class="keyword">if</span> (recorder.bufferListBlock) &#123;</span><br><span class="line">        recorder.bufferListBlock(&amp;bufferList);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> noErr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">- (FSUnitRecorder *)recorder &#123;</span><br><span class="line">    <span class="keyword">if</span> (!_recorder) &#123;</span><br><span class="line">        _recorder = [[FSUnitRecorder alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _recorder;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@weakify(<span class="keyword">self</span>);</span><br><span class="line"><span class="keyword">self</span>.recorder.bufferListBlock = ^(AudioBufferList * _Nonnull bufferList) &#123;</span><br><span class="line">    @strongify(<span class="keyword">self</span>);</span><br><span class="line">    AudioBuffer buffer = bufferList-&gt;mBuffers[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">NSData</span> *data = [<span class="built_in">NSData</span> dataWithBytes:buffer.mData length:buffer.mDataByteSize];</span><br><span class="line">  <span class="comment">// 处理数据</span></span><br><span class="line">    [<span class="keyword">self</span> processSampleData:data];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-双声道录音"><a href="#2-双声道录音" class="headerlink" title="2.双声道录音"></a>2.双声道录音</h1><p><strong>说明：</strong><br>公司新业务要接入蓝牙耳机，支持蓝牙耳机，左右耳机分别进行语音识别等功能。该业务牵扯到实时双通道录音，分别提取左右buffer，类似的业务需求市场上也是有的，比如AirPods，百度的一款蓝牙耳机（小度APP“流浪地球模式”，具体可以买一个个试用下）。<br>废话不多说了，直接看代码就行。</p>
+<p><strong>ZDUnitRecorder.h</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;AVFoundation/AVFoundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">NS_ASSUME_NONNULL_BEGIN</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> (^kAudioUnitRecorderOnputBlock)(AudioBufferList *bufferList);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ZDUnitRecorder</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="keyword">double</span> sampleRate;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>, <span class="keyword">readonly</span>) <span class="built_in">BOOL</span> isRecording;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) kAudioUnitRecorderOnputBlock bufferListBlock;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)start;</span><br><span class="line">- (<span class="keyword">void</span>)stop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">NS_ASSUME_NONNULL_END</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>ZDUnitRecorder.m</strong></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/11/iOS%E5%BC%80%E5%8F%91-AudioUnit%E5%AE%9E%E6%97%B6%E5%BD%95%E9%9F%B3-OC/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/11/09/macos%E5%BC%80%E5%8F%91-NSCollectionView/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -311,101 +408,10 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/11/06/macos%E5%BC%80%E5%8F%91-%E5%85%B3%E9%97%AD-%E6%9C%80%E5%B0%8F%E5%8C%96-%E5%85%A8%E5%B1%8F%E5%B1%85%E4%B8%AD%E5%A4%84%E7%90%86(%E4%BB%BFMac%20QQ)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/06/macos%E5%BC%80%E5%8F%91-%E5%85%B3%E9%97%AD-%E6%9C%80%E5%B0%8F%E5%8C%96-%E5%85%A8%E5%B1%8F%E5%B1%85%E4%B8%AD%E5%A4%84%E7%90%86(%E4%BB%BFMac%20QQ)/" class="post-title-link" itemprop="url">macOS开发-关闭/最小化/全屏居中处理(仿Mac QQ)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-06 14:10:49" itemprop="dateCreated datePublished" datetime="2020-11-06T14:10:49+08:00">2020-11-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>关闭/最小化/全屏居中处理(仿Mac QQ)，效果如下</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1gkffxnzk8aj31e00u0gn3.jpg" alt="image-20201106143307906"></p>
-<p>在<code>WindowController</code>中添加以下代码，直接复制到控制器并修改控制器名称就可以了。</p>
-<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  FSWindowCtl.m</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FSWindowCtl</span> ()&lt;<span class="title">NSWindowDelegate</span>&gt;</span></span><br><span class="line">	</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FSWindowCtl</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)windowDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> windowDidLoad];</span><br><span class="line">    [<span class="keyword">self</span> settingWindowStyle];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 设置window样式</span></span><br><span class="line">- (<span class="keyword">void</span>)settingWindowStyle &#123;</span><br><span class="line">    <span class="keyword">self</span>.window.titlebarAppearsTransparent = <span class="literal">YES</span>;</span><br><span class="line">    <span class="keyword">self</span>.window.titleVisibility = <span class="built_in">NSWindowTitleHidden</span>;</span><br><span class="line">    <span class="keyword">self</span>.window.styleMask = <span class="built_in">NSWindowStyleMaskClosable</span> | <span class="built_in">NSWindowStyleMaskResizable</span> | <span class="built_in">NSWindowStyleMaskTitled</span> | <span class="built_in">NSWindowStyleMaskMiniaturizable</span> | <span class="built_in">NSWindowStyleMaskFullSizeContentView</span>;</span><br><span class="line">    [<span class="keyword">self</span>.window setMovableByWindowBackground:<span class="literal">YES</span>];</span><br><span class="line">    [<span class="keyword">self</span> updateTitleBarOfWindow:<span class="literal">NO</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 修改关闭、最小化、全屏的位置</span></span><br><span class="line">- (<span class="keyword">void</span>)updateTitleBarOfWindow:(<span class="built_in">BOOL</span>)fullScreen &#123;</span><br><span class="line">    <span class="built_in">CGFloat</span> kTitlebarH = <span class="number">54.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> kFullScreenButtonYOrigin = <span class="number">3.0</span>;</span><br><span class="line">    <span class="built_in">NSRect</span> windowFrame = <span class="keyword">self</span>.window.frame;</span><br><span class="line">    <span class="built_in">NSView</span> *titlebarContainerView = [<span class="keyword">self</span>.window standardWindowButton:<span class="built_in">NSWindowCloseButton</span>].superview.superview;</span><br><span class="line">    <span class="built_in">NSRect</span> titlebarContainerFrame = titlebarContainerView.frame;</span><br><span class="line">    titlebarContainerFrame.origin.y = windowFrame.size.height - kTitlebarH;</span><br><span class="line">    titlebarContainerFrame.size.height = (<span class="built_in">CGFloat</span>)kTitlebarH;</span><br><span class="line">    titlebarContainerView.frame = titlebarContainerFrame;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGFloat</span> buttonX = <span class="number">12.0</span>;</span><br><span class="line">    <span class="built_in">NSButton</span> *closeBtn = [<span class="keyword">self</span>.window standardWindowButton:<span class="built_in">NSWindowCloseButton</span>];</span><br><span class="line">    <span class="built_in">NSButton</span> *minimizeBtn = [<span class="keyword">self</span>.window standardWindowButton:<span class="built_in">NSWindowMiniaturizeButton</span>];</span><br><span class="line">    <span class="built_in">NSButton</span> *zoomBtn = [<span class="keyword">self</span>.window standardWindowButton:<span class="built_in">NSWindowZoomButton</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">NSButton</span> *buttonView <span class="keyword">in</span> @[closeBtn, minimizeBtn, zoomBtn]) &#123;</span><br><span class="line">        <span class="built_in">NSRect</span> buttonFrame = buttonView.frame;</span><br><span class="line">        buttonFrame.origin.y = fullScreen ? kFullScreenButtonYOrigin : round((kTitlebarH - buttonFrame.size.height)/<span class="number">2.0</span>);</span><br><span class="line">        buttonFrame.origin.x = (<span class="built_in">CGFloat</span>)buttonX;</span><br><span class="line">        buttonX = buttonFrame.size.width + buttonX + <span class="number">6</span>;</span><br><span class="line">        [buttonView setFrameOrigin:buttonFrame.origin];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> mark - NSWindowDelegate</span></span><br><span class="line">- (<span class="keyword">void</span>)windowDidEnterFullScreen:(<span class="built_in">NSNotification</span> *)notification &#123;</span><br><span class="line">    [<span class="keyword">self</span> updateTitleBarOfWindow:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)windowDidExitFullScreen:(<span class="built_in">NSNotification</span> *)notification &#123;</span><br><span class="line">    [<span class="keyword">self</span> updateTitleBarOfWindow:<span class="literal">NO</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)windowDidResize:(<span class="built_in">NSNotification</span> *)notification &#123;</span><br><span class="line">    [<span class="keyword">self</span> updateTitleBarOfWindow:<span class="literal">NO</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/11/06/macos%E5%BC%80%E5%8F%91-%E5%85%B3%E9%97%AD-%E6%9C%80%E5%B0%8F%E5%8C%96-%E5%85%A8%E5%B1%8F%E5%B1%85%E4%B8%AD%E5%A4%84%E7%90%86(%E4%BB%BFMac%20QQ)/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -472,7 +478,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -483,7 +489,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -567,12 +573,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">237k</span>
+    <span title="站点总字数">254k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:36</span>
+    <span title="站点阅读时长">3:51</span>
 </div>
 
         
