@@ -223,6 +223,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/11/05/macOS%E5%BC%80%E5%8F%91-NSOpenPanel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/05/macOS%E5%BC%80%E5%8F%91-NSOpenPanel/" class="post-title-link" itemprop="url">macOS开发-NSOpenPanel</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-05 11:29:01" itemprop="dateCreated datePublished" datetime="2020-11-05T11:29:01+08:00">2020-11-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一-前言"><a href="#一-前言" class="headerlink" title="一. 前言"></a>一. 前言</h1><p><strong>打开面板</strong>，提示用户选择要打开的文件。</p>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSOpenPanel</span> : <span class="title">NSSavePanel</span></span></span><br></pre></td></tr></table></figure>
+
+<img src="https://tva1.sinaimg.cn/large/0081Kckwly1gke553cxmxj318e0owjyl.jpg" alt="image-20201105113305295" style="zoom:50%;">
+
+<blockquote>
+<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a><a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/appkit/nsopenpanel?language=objc">Overview</a></h2><p>Apps use the Open panel as a convenient way to query the user for the name of a file to open. In macOS 10.15 and later, the system always draws Open panels in a separate process, regardless of whether the app is sandboxed. When the user chooses a file to open, macOS adds that file to the app’s sandbox. Prior to macOS 10.15, the system drew the panels in a separate process only for sandboxed apps.</p>
+<p>应用程序使用“打开”面板作为方便的方法来查询用户要打开的文件的名称。在macOS 10.15及更高版本中，系统始终在单独的过程中绘制“打开”面板，而不管该应用程序是否被沙箱化。当用户选择要打开的文件时，macOS将该文件添加到应用的沙箱中。在macOS 10.15之前，系统仅在沙盒应用程序的单独过程中绘制面板。</p>
+</blockquote>
+<h1 id="二-官方属性方法"><a href="#二-官方属性方法" class="headerlink" title="二. 官方属性方法"></a>二. 官方属性方法</h1><h2 id="1-创建打开面板"><a href="#1-创建打开面板" class="headerlink" title="1. 创建打开面板"></a>1. 创建打开面板</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">+ (<span class="built_in">NSOpenPanel</span> *)openPanel; <span class="comment">// 创建NSOpenPanel实例对象，但是这个类不是单例。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-配置打开面板"><a href="#2-配置打开面板" class="headerlink" title="2. 配置打开面板"></a>2. 配置打开面板</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 是否解析别名</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> resolvesAliases;</span><br><span class="line"><span class="comment">// 是否可以选择目录</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> canChooseDirectories;</span><br><span class="line"><span class="comment">// 是否可以选择多个文件或目录</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> allowsMultipleSelection;</span><br><span class="line"><span class="comment">// 是否选择文件</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> canChooseFiles;</span><br><span class="line"><span class="comment">// 附件视图是否可见</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">getter</span>=isAccessoryViewDisclosed) <span class="built_in">BOOL</span> accessoryViewDisclosed API_AVAILABLE(macos(<span class="number">10.11</span>)); </span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/05/macOS%E5%BC%80%E5%8F%91-NSOpenPanel/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/11/05/iOS-%E6%9C%AC%E5%9C%B0%E6%8E%A8%E9%80%81-Local-Push/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -320,104 +417,6 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/11/04/macOS%E5%BC%80%E5%8F%91-google-gRPC%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/04/macOS%E5%BC%80%E5%8F%91-google-gRPC%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">macOS-google gRPC的简单使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-11-04 18:11:13 / 修改时间：18:22:13" itemprop="dateCreated datePublished" datetime="2020-11-04T18:11:13+08:00">2020-11-04</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>9 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="google-gRPC在macOS中的简单使用"><a href="#google-gRPC在macOS中的简单使用" class="headerlink" title="google gRPC在macOS中的简单使用"></a>google gRPC在macOS中的简单使用</h1><blockquote>
-<p><a target="_blank" rel="noopener" href="http://doc.oschina.net/grpc?t=56831">gRPC 官方文档中文版</a></p>
-</blockquote>
-<h2 id="1-简述"><a href="#1-简述" class="headerlink" title="1. 简述"></a>1. 简述</h2><blockquote>
-<p>A high-performance, open-source universal RPC framework</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="http://www.oschina.net/p/grpc-framework">gRPC</a> 是一个高性能、开源和通用的 RPC 框架，面向移动和 HTTP/2 设计。目前提供 C、Java 和 Go 语言版本，分别是：grpc, grpc-java, grpc-go. 其中 C 版本支持 C, C++, Node.js, Python, Ruby, Objective-C, PHP 和 C# 支持。</p>
-<p>gRPC 基于 HTTP/2 标准设计，带来诸如双向流、流控、头部压缩、单 TCP 连接上的多复用请求等特。这些特性使得其在移动设备上表现更好，更省电和节省空间占用。</p>
-<p>RPC（Remote Procedure Call）远程过程调用，简单的理解是一个节点请求另一个节点提供的服务，使应用程序之间可以进行通信，而且也遵循service/client模型。在客户端调用service端提供的接口就像是调用本地函数一样，一般使用客户端快速能获取到服务器接口数据的时候，如：实时语音识别、翻译、语音合成等。</p>
-<p><img src="https://www.grpc.io/img/grpc_concept_diagram_00.png" alt="img"></p>
-<p><strong>下面详解<code>googleapis</code>里的gRPC的使用</strong></p>
-<h2 id="2-cocopods添加gRPC"><a href="#2-cocopods添加gRPC" class="headerlink" title="2. cocopods添加gRPC"></a>2. <code>cocopods</code>添加<code>gRPC</code></h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/11/04/macOS%E5%BC%80%E5%8F%91-google-gRPC%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
@@ -488,18 +487,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -583,12 +582,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">257k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">3:54</span>
 </div>
 
         

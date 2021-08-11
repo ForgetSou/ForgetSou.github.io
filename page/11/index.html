@@ -223,6 +223,104 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/22/macOS%E5%BC%80%E5%8F%91-NSTableView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/22/macOS%E5%BC%80%E5%8F%91-NSTableView/" class="post-title-link" itemprop="url">macOS开发-NSTableView</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-10-22 10:07:45 / 修改时间：18:07:45" itemprop="dateCreated datePublished" datetime="2020-10-22T10:07:45+08:00">2020-10-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="NSTableView"><a href="#NSTableView" class="headerlink" title="NSTableView"></a>NSTableView</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>​    一组相关记录，显示在代表单个记录的行和代表这些记录的属性的列中。</p>
+<blockquote>
+<p>参考</p>
+<p><a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/appkit/nstableview?language=objc">官方文档</a></p>
+</blockquote>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSTableView</span> : <span class="title">NSControl</span> &lt;<span class="title">NSUserInterfaceValidations</span>, <span class="title">NSTextViewDelegate</span>, <span class="title">NSDraggingSource</span>, <span class="title">NSAccessibilityTable</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-代码实现"><a href="#2-代码实现" class="headerlink" title="2.代码实现"></a>2.代码实现</h2><h3 id="1-1-基础创建"><a href="#1-1-基础创建" class="headerlink" title="1.1 基础创建"></a>1.1 基础创建</h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  ViewController.m</span></span><br><span class="line"><span class="comment">//  ZDMacOSDemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by forget on 2020/10/19.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;ViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()&lt;<span class="title">NSTableViewDelegate</span>, <span class="title">NSTableViewDataSource</span>&gt;// 系统</span></span><br><span class="line">  </span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithFrame:(<span class="built_in">NSRect</span>)frameRect <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line">- (<span class="keyword">nullable</span> <span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)coder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;<span class="built_in">NSTableViewDataSource</span>&gt; dataSource;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">weak</span>) <span class="keyword">id</span> &lt;<span class="built_in">NSTableViewDelegate</span>&gt; delegate;</span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;ViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()&lt;<span class="title">NSTableViewDelegate</span>, <span class="title">NSTableViewDataSource</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 创建TableView</span></span><br><span class="line"><span class="built_in">NSTableView</span> *tableView = [[<span class="built_in">NSTableView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1000</span>, <span class="number">500</span>)];</span><br><span class="line"><span class="comment">// 隐藏header</span></span><br><span class="line">tableView.headerView = <span class="literal">nil</span>; </span><br><span class="line">tableView.dataSource = <span class="keyword">self</span>;</span><br><span class="line">tableView.delegate = <span class="keyword">self</span>;</span><br><span class="line">tableView.backgroundColor = <span class="built_in">NSColor</span>.blueColor;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:tableView];</span><br></pre></td></tr></table></figure>
+
+<p>此时运行并不显示在界面上，即使你设置了背景色，因为此时<code>NSTableView</code>的column=0。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/22/macOS%E5%BC%80%E5%8F%91-NSTableView/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/21/macOS%E5%BC%80%E5%8F%91-AppKit%E6%9E%B6%E6%9E%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -317,98 +415,6 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/20/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/20/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">git常用命令</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-10-20 17:09:50 / 修改时间：17:15:50" itemprop="dateCreated datePublished" datetime="2020-10-20T17:09:50+08:00">2020-10-20</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Other/" itemprop="url" rel="index"><span itemprop="name">Other</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一-开始工作区"><a href="#一-开始工作区" class="headerlink" title="一. 开始工作区"></a>一. 开始工作区</h2><h3 id="1-clone-克隆远程仓库到本地"><a href="#1-clone-克隆远程仓库到本地" class="headerlink" title="1. clone 克隆远程仓库到本地"></a>1. clone 克隆远程仓库到本地</h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/ForgetSou/myBlog.git</span></span><br><span class="line"></span><br><span class="line">git clone -b branch_1<span class="number">.0</span><span class="number">.0</span> https:<span class="comment">//github.com/ForgetSou/myBlog.git</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-init-初始化仓库"><a href="#2-init-初始化仓库" class="headerlink" title="2. init 初始化仓库"></a>2. init 初始化仓库</h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<h2 id="二-处理变化"><a href="#二-处理变化" class="headerlink" title="二.处理变化"></a>二.处理变化</h2><h3 id="1-git-add"><a href="#1-git-add" class="headerlink" title="1. git add"></a>1. git add</h3><p>添加文件到暂存区</p>
-<h4 id="1-1-添加一个或多个文件"><a href="#1-1-添加一个或多个文件" class="headerlink" title="1.1 添加一个或多个文件"></a>1.1 添加一个或多个文件</h4><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">git add [file1] [file2] ...</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/20/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
@@ -479,18 +485,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -574,12 +580,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">257k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">3:54</span>
 </div>
 
         

@@ -223,6 +223,112 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSImageView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSImageView/" class="post-title-link" itemprop="url">macOS开发-NSImageView</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-19 18:11:13" itemprop="dateCreated datePublished" datetime="2020-10-19T18:11:13+08:00">2020-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-20 18:30:13" itemprop="dateModified" datetime="2020-10-20T18:30:13+08:00">2020-10-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一-简介"><a href="#一-简介" class="headerlink" title="一.简介"></a>一.简介</h1><p><code>NSImageView</code>和iOS的<code>UIImageView</code>类似，只有添加手势时有些不一样。macOS中<code>NSImageView</code>没有<code>userInteractionEnabled</code>,不能添加gesture。</p>
+<h1 id="二-示例"><a href="#二-示例" class="headerlink" title="二.示例"></a>二.示例</h1><p>要想给<code>NSImageView</code>添加手势有2种方式</p>
+<ul>
+<li><p>需要创建一个子类集成<code>NSImageView</code>，重写mouseDown、mouseUp等方法。</p>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">//  FSImageView.h</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;Cocoa/Cocoa.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FSImageView</span> : <span class="title">NSImageView</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) <span class="keyword">void</span>(^mouseDownBlock)(<span class="keyword">void</span>);</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) <span class="keyword">void</span>(^mouseUpBlock)(<span class="keyword">void</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  FSImageView.m</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&quot;FSImageView.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FSImageView</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)drawRect:(<span class="built_in">NSRect</span>)dirtyRect &#123;</span><br><span class="line">    [<span class="keyword">super</span> drawRect:dirtyRect];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Drawing code here.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)mouseDown:(<span class="built_in">NSEvent</span> *)event &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.mouseDownBlock) &#123;</span><br><span class="line">        <span class="keyword">self</span>.mouseDownBlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)mouseUp:(<span class="built_in">NSEvent</span> *)event &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.mouseUpBlock) &#123;</span><br><span class="line">        <span class="keyword">self</span>.mouseUpBlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//  ViewController.m</span></span><br><span class="line">FSImageView *imgView = [[FSImageView alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">200</span>, <span class="number">200</span>)];</span><br><span class="line">imgView.image = [<span class="built_in">NSImage</span> imageNamed:<span class="string">@&quot;avator&quot;</span>];</span><br><span class="line"><span class="comment">// 设置背景色</span></span><br><span class="line">imgView.wantsLayer = <span class="literal">YES</span>;</span><br><span class="line">imgView.layer.backgroundColor = <span class="built_in">NSColor</span>.redColor.CGColor;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置圆角</span></span><br><span class="line">imgView.layer.cornerRadius = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 设置边框</span></span><br><span class="line">imgView.layer.borderColor = <span class="built_in">NSColor</span>.redColor.CGColor;</span><br><span class="line">imgView.layer.borderWidth = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加手势</span></span><br><span class="line">imgView.mouseDownBlock = ^&#123;</span><br><span class="line">	<span class="comment">// 按下</span></span><br><span class="line">&#125;;</span><br><span class="line">imgView.mouseUpBlock = ^&#123;</span><br><span class="line">	<span class="comment">// 抬起</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">[<span class="keyword">self</span>.view addSubview:imgView];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为<code>NSImageView</code>添加手势NSGestureRecognizer</p>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">// NSGestureRecognizer的子类来确定使用哪种手势</span></span><br><span class="line"><span class="comment">/*! </span></span><br><span class="line"><span class="comment">NSClickGestureRecognizer 					单点</span></span><br><span class="line"><span class="comment">NSPanGestureRecognizer						拖动</span></span><br><span class="line"><span class="comment">NSMagnificationGestureRecognizer	放大</span></span><br><span class="line"><span class="comment">NSPressGestureRecognizer					按压</span></span><br><span class="line"><span class="comment">NSRotationGestureRecognizer				旋转</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">FSImageView *imgView = [[FSImageView alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">200</span>, <span class="number">200</span>)];</span><br><span class="line">imgView.image = [<span class="built_in">NSImage</span> imageNamed:<span class="string">@&quot;avator&quot;</span>];</span><br><span class="line"><span class="comment">// 设置背景色</span></span><br><span class="line">imgView.wantsLayer = <span class="literal">YES</span>;</span><br><span class="line">imgView.layer.backgroundColor = <span class="built_in">NSColor</span>.redColor.CGColor;</span><br><span class="line"><span class="comment">// 设置圆角</span></span><br><span class="line">imgView.layer.cornerRadius = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 设置边框</span></span><br><span class="line">imgView.layer.borderColor = <span class="built_in">NSColor</span>.redColor.CGColor;</span><br><span class="line">imgView.layer.borderWidth = <span class="number">5</span>;</span><br><span class="line"><span class="comment">// 添加手势</span></span><br><span class="line"><span class="built_in">NSClickGestureRecognizer</span> *gesture = [[<span class="built_in">NSClickGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(imageViewClick:)];</span><br><span class="line">[view addGestureRecognizer:gesture];</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:imgView];</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)imageViewClick:(<span class="built_in">NSGestureRecognizer</span> *)gesture &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;touch view&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSImageView/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSButton/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -319,101 +425,6 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSTextField/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSTextField/" class="post-title-link" itemprop="url">macOS开发-NSTextField</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-19 16:29:55" itemprop="dateCreated datePublished" datetime="2020-10-19T16:29:55+08:00">2020-10-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-22 09:29:55" itemprop="dateModified" datetime="2020-10-22T09:29:55+08:00">2020-10-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="NSTextField-简介"><a href="#NSTextField-简介" class="headerlink" title="NSTextField 简介"></a>NSTextField 简介</h1><p><strong>输入框</strong>，主要用于用户输入文本，同 <code>iOS</code>里的<code>UITextField</code></p>
-<p>在macOS开发环境下，没有像<code>iOS</code>里的<code>UILabel</code>一样定义、创建标签，此时可以使用<code>NSTextField</code>创建标签</p>
-<h1 id="NSTextField-举例"><a href="#NSTextField-举例" class="headerlink" title="NSTextField 举例"></a>NSTextField 举例</h1><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSTextField</span> *tf = [[<span class="built_in">NSTextField</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>, <span class="number">100</span>)];</span><br><span class="line">    tf.toolTip = <span class="string">@&quot;10月16日，第二届中国互联网企业社会责任高峰论坛暨《2020中国互联网企业社会责任报告》（下称“报告”）发布会在京举办。&quot;</span>;</span><br><span class="line">    <span class="built_in">NSString</span> *text = <span class="string">@&quot;10月16日，第二届中国互联网企业社会责任高峰论坛暨《2020中国互联网企业社会责任报告》（下称“报告”）发布会在京举办。报告由北京师范大学互联网发展研究院、互联网司法治理研究中心联合光明网、中国经济网、中国日报网、中国网、北师大中国教育与社会发展研究院权威发布，系统评价了中国互联网企业社会责任发展现状，为进一步强化社会责任意识，改进社会责任管理，更好地促进经济效益与社会效益的统一，实现企业和行业健康、有序地发展提供依据。&quot;</span>;</span><br><span class="line">    <span class="comment">// 中划线</span></span><br><span class="line">    <span class="built_in">NSDictionary</span> *middleAttributeDic = @&#123;<span class="built_in">NSStrikethroughStyleAttributeName</span> : @(<span class="built_in">NSUnderlineStyleSingle</span>)&#125;;</span><br><span class="line">    <span class="comment">/*!</span></span><br><span class="line"><span class="comment">     NSStrikethroughStyleAttributeName  // 中划线</span></span><br><span class="line"><span class="comment">     NSUnderlineStyleAttributeName      // 下划线</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="built_in">NSMutableAttributedString</span> *attributeStr = [[<span class="built_in">NSMutableAttributedString</span> alloc] initWithString:text attributes:middleAttributeDic];</span><br><span class="line">    </span><br><span class="line">    tf.attributedStringValue = attributeStr;</span><br><span class="line">    tf.placeholderString = <span class="string">@&quot;NSTextField-placeholdString&quot;</span>;</span><br><span class="line">    tf.backgroundColor = <span class="built_in">NSColor</span>.clearColor;</span><br><span class="line">    tf.textColor = <span class="built_in">NSColor</span>.whiteColor;</span><br><span class="line">    tf.bordered = <span class="literal">false</span>;</span><br><span class="line">    tf.editable = <span class="literal">false</span>;</span><br><span class="line">    tf.selectable = <span class="literal">true</span>;</span><br><span class="line">    tf.highlighted = <span class="literal">false</span>;</span><br><span class="line">	  tf.focusRingType = <span class="built_in">NSFocusRingTypeNone</span>;<span class="comment">// 去除周围蓝色或橙色框</span></span><br><span class="line">    tf.delegate = <span class="keyword">self</span>;</span><br><span class="line">    [[tf cell] setUsesSingleLineMode:<span class="literal">false</span>];</span><br><span class="line">    [[tf cell] setTruncatesLastVisibleLine:<span class="literal">false</span>];</span><br><span class="line">    tf.font = [<span class="built_in">NSFont</span> systemFontOfSize:<span class="number">15</span>];</span><br><span class="line">    tf.alignment = <span class="built_in">NSTextAlignmentCenter</span>;</span><br><span class="line">    tf.maximumNumberOfLines = <span class="number">2</span>;</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:tf];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> mark - NSTextFieldDelegate</span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">BOOL</span>)textField:(<span class="built_in">NSTextField</span> *)textField textView:(<span class="built_in">NSTextView</span> *)textView shouldSelectCandidateAtIndex:(<span class="built_in">NSUInteger</span>)index &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSArray</span> *)textField:(<span class="built_in">NSTextField</span> *)textField textView:(<span class="built_in">NSTextView</span> *)textView candidatesForSelectedRange:(<span class="built_in">NSRange</span>)selectedRange &#123;</span><br><span class="line">    <span class="keyword">return</span> @[];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSTextCheckingResult</span> *&gt; *)textField:(<span class="built_in">NSTextField</span> *)textField textView:(<span class="built_in">NSTextView</span> *)textView candidates:(<span class="built_in">NSArray</span>&lt;<span class="built_in">NSTextCheckingResult</span> *&gt; *)candidates forSelectedRange:(<span class="built_in">NSRange</span>)selectedRange &#123;</span><br><span class="line">    <span class="keyword">return</span> @[];</span><br><span class="line">&#125;```</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/19/macOS%E5%BC%80%E5%8F%91-NSTextField/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
@@ -484,18 +495,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -579,12 +590,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">254k</span>
+    <span title="站点总字数">257k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:51</span>
+    <span title="站点阅读时长">3:54</span>
 </div>
 
         
