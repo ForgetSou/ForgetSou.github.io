@@ -223,6 +223,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/23/macOS-BLE%E8%93%9D%E7%89%994-0%E5%BC%80%E5%8F%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/23/macOS-BLE%E8%93%9D%E7%89%994-0%E5%BC%80%E5%8F%91/" class="post-title-link" itemprop="url">macOS-BLE蓝牙4.0开发</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-23 14:33:13" itemprop="dateCreated datePublished" datetime="2020-10-23T14:33:13+08:00">2020-10-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="macOS-BLE蓝牙4-0开发"><a href="#macOS-BLE蓝牙4-0开发" class="headerlink" title="macOS-BLE蓝牙4.0开发"></a>macOS-BLE蓝牙4.0开发</h1><p>！！！<strong>中心模式</strong> ！！！</p>
+<p><code>macOS</code>的BLE程序代码和<code>iOS</code>差不多，只需要修改一些UI组件就可以把<code>iOS</code>的代码放在<code>macOS</code>上使用，下面列举移除不同之处。</p>
+<h2 id="1-蓝牙状态一直CBManagerStateUnsupported的问题"><a href="#1-蓝牙状态一直CBManagerStateUnsupported的问题" class="headerlink" title="1 蓝牙状态一直CBManagerStateUnsupported的问题"></a>1 蓝牙状态一直CBManagerStateUnsupported的问题</h2><p>在<code>Xcode</code>中打开targets中的沙盒蓝牙设置，具体路径: TARGETS - Signing &amp; Capanilities - App Sandbox - Handware - Bluetooth</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1gjzbejhkefj30rj08swfl.jpg" alt="TARGET-Bluetooth"></p>
+<p>info.plist 里面添加<code>NSBluetoothPeripheralUsageDescription</code> Value 根据具体业务详细说明使用蓝牙的目的，以提示用户开启蓝牙权限，避免审核被拒。</p>
+<h2 id="2-代码实现"><a href="#2-代码实现" class="headerlink" title="2 代码实现"></a>2 代码实现</h2><h3 id="2-1-导入蓝牙库"><a href="#2-1-导入蓝牙库" class="headerlink" title="2.1 导入蓝牙库"></a><strong>2.1 导入蓝牙库</strong></h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;CoreBluetooth/CoreBluetooth.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/23/macOS-BLE%E8%93%9D%E7%89%994-0%E5%BC%80%E5%8F%91/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/22/macOS%E5%BC%80%E5%8F%91-NSTableView/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -317,108 +408,10 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/21/macOS%E5%BC%80%E5%8F%91-AppKit%E6%9E%B6%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/21/macOS%E5%BC%80%E5%8F%91-AppKit%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">macOS开发-AppKit架构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-21 16:27:47" itemprop="dateCreated datePublished" datetime="2020-10-21T16:27:47+08:00">2020-10-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Other/" itemprop="url" rel="index"><span itemprop="name">Other</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>172</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>参考: <a target="_blank" rel="noopener" href="https://developer.apple.com/documentation/appkit">https://developer.apple.com/documentation/appkit</a></p>
-</blockquote>
-<h1 id="AppKit-架构"><a href="#AppKit-架构" class="headerlink" title="AppKit 架构"></a><a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5f9644dd1e085307a0a44ba9">AppKit 架构</a></h1><blockquote>
-<p>可用性</p>
-<ul>
-<li>macOS 10.0以上</li>
-<li>Mac Catalyst 13.0以上</li>
-</ul>
-</blockquote>
-<p>具体说明请点击链接进入processon查看 <a target="_blank" rel="noopener" href="https://www.processon.com/view/link/5f9644dd1e085307a0a44ba9">https://www.processon.com/view/link/5f9644dd1e085307a0a44ba9</a></p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1gk2laqztw2j30u02csqen.jpg" alt="AppKit框架"></p>
-
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/21/macOS%E5%BC%80%E5%8F%91-AppKit%E6%9E%B6%E6%9E%84/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -485,7 +478,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -496,7 +489,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -580,12 +573,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">257k</span>
+    <span title="站点总字数">258k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:54</span>
+    <span title="站点阅读时长">3:55</span>
 </div>
 
         

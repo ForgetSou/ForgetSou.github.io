@@ -223,6 +223,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2021/08/19/%E5%9C%A8Mac%E7%BB%88%E7%AB%AF%E4%B8%8A%E4%BD%BF%E7%94%A8Minicom%E8%BF%9B%E8%A1%8C%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/19/%E5%9C%A8Mac%E7%BB%88%E7%AB%AF%E4%B8%8A%E4%BD%BF%E7%94%A8Minicom%E8%BF%9B%E8%A1%8C%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95/" class="post-title-link" itemprop="url">在Mac终端上使用Minicom进行串口调试</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-19 13:40:35 / 修改时间：13:45:31" itemprop="dateCreated datePublished" datetime="2021-08-19T13:40:35+08:00">2021-08-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Other/" itemprop="url" rel="index"><span itemprop="name">Other</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>​    最近在升级飞机的<code>SDR</code>固件，需要使用<code>USB</code>串口进行升级，就记录下使用<code>Minicom</code> <code>USB</code>串口升级固件的方式。</p>
+<p>​    minicom是一个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1/3775296">串口通信</a>工具，就像Windows下的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E8%B6%85%E7%BA%A7%E7%BB%88%E7%AB%AF/1702227">超级终端</a>。可用来与串口设备通信，如调试交换机和Modem等。它的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Debian/748667">Debian</a>软件包的名称就叫minicom。</p>
+<h3 id="1-minicom的安装"><a href="#1-minicom的安装" class="headerlink" title="1. minicom的安装"></a>1. <code>minicom</code>的安装</h3><p><code>brew</code> 安装</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$ brew install minicom</span><br></pre></td></tr></table></figure>
+
+<p><em>在安装过程中报错</em></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">Running Homebrew as root is extremely dangerous <span class="keyword">and</span> no longer supported.</span><br><span class="line">As Homebrew does <span class="keyword">not</span> drop privileges on installation you would be giving all</span><br><span class="line">build scripts full access to your system.</span><br></pre></td></tr></table></figure>
+
+<p>​    以根用户身份运行自制程序非常危险，不再受支持。<br>​    由于Homebrew不会放弃安装权限，因此您将授予所有生成脚本对系统的完全访问权限。</p>
+<p>解决方案:</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">$ sudo chown -R `whoami` <span class="regexp">/usr/</span>local<span class="regexp">/Homebrew/</span></span><br><span class="line">$ sudo chown -R $(whoami) $(brew --prefix)/*</span><br><span class="line">$ sudo mkdir <span class="regexp">/usr/</span>local/Frameworks</span><br><span class="line">$ sudo chown -R `whoami` <span class="regexp">/usr/</span>local<span class="regexp">/Frameworks/</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/19/%E5%9C%A8Mac%E7%BB%88%E7%AB%AF%E4%B8%8A%E4%BD%BF%E7%94%A8Minicom%E8%BF%9B%E8%A1%8C%E4%B8%B2%E5%8F%A3%E8%B0%83%E8%AF%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2021/08/11/%F0%9F%93%9A%E3%80%8A%E9%AB%98%E6%80%A7%E8%83%BDiOS%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E3%80%8B-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%80%A7%E8%83%BD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -310,106 +407,10 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2021/08/11/iOS%E5%BC%80%E5%8F%91-AES-ECB-PKCS5Padding%E5%8A%A0%E8%A7%A3%E5%AF%86-OC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/11/iOS%E5%BC%80%E5%8F%91-AES-ECB-PKCS5Padding%E5%8A%A0%E8%A7%A3%E5%AF%86-OC/" class="post-title-link" itemprop="url">iOS开发-AES/ECB/PKCS5Padding加解密(OC)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-11 17:28:25" itemprop="dateCreated datePublished" datetime="2021-08-11T17:28:25+08:00">2021-08-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>16k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>15 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一-简述"><a href="#一-简述" class="headerlink" title="一. 简述"></a>一. 简述</h1><h2 id="1-加解密方式有很多，iOS常用的加密方式有"><a href="#1-加解密方式有很多，iOS常用的加密方式有" class="headerlink" title="1. 加解密方式有很多，iOS常用的加密方式有:"></a>1. 加解密方式有很多，<code>iOS</code>常用的加密方式有:</h2><ul>
-<li>哈希算法: MD5、SHA</li>
-<li>对称加密算法: DES、3DES、AES</li>
-<li>非对称加密算法: RSA</li>
-</ul>
-<p>本文主要讲述<code>AES/ECB/PKCS5Padding</code>加解密方式</p>
-<h1 id="二-示例"><a href="#二-示例" class="headerlink" title="二. 示例"></a>二. 示例</h1><h2 id="1-加密"><a href="#1-加密" class="headerlink" title="1. 加密"></a>1. 加密</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> k_aesECBKey                         @<span class="meta-string">&quot;AAAAA&quot;</span><span class="comment">// AAAAA只是示例，换成自己喜欢的字符串</span></span></span><br><span class="line"><span class="comment">// 加密</span></span><br><span class="line">+ (<span class="built_in">NSString</span> *)encryptText:(<span class="built_in">NSString</span> *)text &#123;</span><br><span class="line">    CCCryptorStatus status = kCCSuccess;</span><br><span class="line">    <span class="built_in">NSData</span> *data = [text dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">    <span class="built_in">NSData</span> *result = [data dataEncryptedUsingAlgorithm:kCCAlgorithmAES128</span><br><span class="line">                                                   key:k_aesECBKey</span><br><span class="line">                                  initializationVector:<span class="literal">nil</span></span><br><span class="line">                                               options:(kCCOptionPKCS7Padding|kCCOptionECBMode)</span><br><span class="line">                                                 error:&amp;status];</span><br><span class="line">    <span class="keyword">if</span> (status != kCCSuccess) &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="string">@&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> convertDataToHexStr:result];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 将十六进制data转为十六进制字符串</span></span><br><span class="line"><span class="comment"> </span></span><br><span class="line"><span class="comment"> @param data 十六进制data</span></span><br><span class="line"><span class="comment"> @return 十六进制字符串</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">+ (<span class="built_in">NSString</span> *)convertDataToHexStr:(<span class="built_in">NSData</span> *)data &#123;</span><br><span class="line">	<span class="keyword">if</span> (!data || [data length] == <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">@&quot;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">NSMutableString</span> *string = [[<span class="built_in">NSMutableString</span> alloc] initWithCapacity:[data length]];</span><br><span class="line">	</span><br><span class="line">	[data enumerateByteRangesUsingBlock:^(<span class="keyword">const</span> <span class="keyword">void</span> *bytes, <span class="built_in">NSRange</span> byteRange, <span class="built_in">BOOL</span> *stop) &#123;</span><br><span class="line">		<span class="keyword">unsigned</span> <span class="keyword">char</span> *dataBytes = (<span class="keyword">unsigned</span> <span class="keyword">char</span>*)bytes;</span><br><span class="line">		<span class="keyword">for</span> (<span class="built_in">NSInteger</span> i = <span class="number">0</span>; i &lt; byteRange.length; i++) &#123;</span><br><span class="line">			<span class="built_in">NSString</span> *hexStr = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%x&quot;</span>, (dataBytes[i]) &amp; <span class="number">0xff</span>];</span><br><span class="line">			<span class="keyword">if</span> ([hexStr length] == <span class="number">2</span>) &#123;</span><br><span class="line">				[string appendString:hexStr];</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				[string appendFormat:<span class="string">@&quot;0%@&quot;</span>, hexStr];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;];</span><br><span class="line">	<span class="keyword">return</span> string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-解密"><a href="#2-解密" class="headerlink" title="2. 解密"></a>2. 解密</h2><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 解密</span></span><br><span class="line">+ (<span class="built_in">NSString</span> *)decryptHexStr:(<span class="built_in">NSString</span> *)hexStr &#123;</span><br><span class="line">    <span class="built_in">NSData</span> *data = [<span class="keyword">self</span> convertHexStrToData:hexStr];</span><br><span class="line">    CCCryptorStatus status = kCCSuccess;</span><br><span class="line">    <span class="built_in">NSData</span>* result = [data decryptedDataUsingAlgorithm:kCCAlgorithmAES128</span><br><span class="line">                                                   key:k_aesECBKey</span><br><span class="line">                                  initializationVector:<span class="literal">nil</span>   <span class="comment">// ECB解密不会用到iv</span></span><br><span class="line">                                               options:(kCCOptionPKCS7Padding|kCCOptionECBMode)</span><br><span class="line">                                                 error:&amp;status];</span><br><span class="line">    <span class="keyword">if</span> (status != kCCSuccess) &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="string">@&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [[<span class="built_in">NSString</span> alloc] initWithData:result encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSData</span> *)convertHexStrToData:(<span class="built_in">NSString</span> *)str &#123;</span><br><span class="line">    <span class="keyword">if</span> (!str || [str length] == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">NSMutableData</span> *hexData = [[<span class="built_in">NSMutableData</span> alloc] initWithCapacity:<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSRange</span> range;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([str length] % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">        range = <span class="built_in">NSMakeRange</span>(<span class="number">0</span>, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        range = <span class="built_in">NSMakeRange</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">NSInteger</span> i = range.location; i &lt; [str length]; i+= <span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> anInt;</span><br><span class="line">        <span class="built_in">NSString</span>*hexCharStr= [str substringWithRange:range];</span><br><span class="line"></span><br><span class="line">        <span class="built_in">NSScanner</span>*scanner= [[<span class="built_in">NSScanner</span> alloc] initWithString:hexCharStr];</span><br><span class="line"> </span><br><span class="line">        [scanner scanHexInt:&amp;anInt];</span><br><span class="line"></span><br><span class="line">        <span class="built_in">NSData</span> *entity= [[<span class="built_in">NSData</span> alloc] initWithBytes:&amp;anInt length:<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        [hexData appendData:entity];</span><br><span class="line"></span><br><span class="line">        range.location+= range.length;</span><br><span class="line"></span><br><span class="line">        range.length= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> hexData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>⚠️ <strong>NSData+CommonCrypto.h</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/08/11/iOS%E5%BC%80%E5%8F%91-AES-ECB-PKCS5Padding%E5%8A%A0%E8%A7%A3%E5%AF%86-OC/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -476,7 +477,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -487,7 +488,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -571,12 +572,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">257k</span>
+    <span title="站点总字数">258k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:54</span>
+    <span title="站点阅读时长">3:55</span>
 </div>
 
         

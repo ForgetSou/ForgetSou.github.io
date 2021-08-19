@@ -223,6 +223,98 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/27/macOS-NSMenu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ForgetSou">
+      <meta itemprop="description" content=" 开发">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ForgetSou | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/27/macOS-NSMenu/" class="post-title-link" itemprop="url">macOS-NSMenu</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-27 09:56:01" itemprop="dateCreated datePublished" datetime="2020-10-27T09:56:01+08:00">2020-10-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="macOS-NSMenu"><a href="#macOS-NSMenu" class="headerlink" title="macOS-NSMenu"></a>macOS-NSMenu</h1><h2 id="1-简述"><a href="#1-简述" class="headerlink" title="1 简述"></a>1 简述</h2><p>管理应用菜单的对象，通常会在程序的主菜单栏，视图右键菜单，Dock菜单使用。</p>
+<figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSMenu</span> : <span class="title">NSObject</span> &lt;<span class="title">NSCopying</span>, <span class="title">NSCoding</span>, <span class="title">NSUserInterfaceItemIdentification</span>, <span class="title">NSAccessibilityElement</span>, <span class="title">NSAccessibility</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-NSMenu源码注解"><a href="#2-NSMenu源码注解" class="headerlink" title="2 NSMenu源码注解"></a>2 <code>NSMenu</code>源码注解</h2><h3 id="2-1-创建"><a href="#2-1-创建" class="headerlink" title="2.1 创建"></a>2.1 创建</h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithTitle:(<span class="built_in">NSString</span> *)title <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br><span class="line">- (<span class="keyword">instancetype</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)coder <span class="built_in">NS_DESIGNATED_INITIALIZER</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-常用属性"><a href="#2-2-常用属性" class="headerlink" title="2.2 常用属性"></a>2.2 常用属性</h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 菜单标题</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>) <span class="built_in">NSString</span> *title;</span><br><span class="line"><span class="comment">// 父菜单</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">assign</span>) <span class="built_in">NSMenu</span> *supermenu;</span><br><span class="line"><span class="comment">// 当前菜单下的子菜单数组</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>) <span class="built_in">NSArray</span>&lt;<span class="built_in">NSMenuItem</span> *&gt; *itemArray;</span><br><span class="line"><span class="comment">// item数量</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSInteger</span> numberOfItems;</span><br><span class="line"><span class="comment">// 是否自动启用项目</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> autoenablesItems;</span><br><span class="line"><span class="comment">// 菜单高度</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">CGFloat</span> menuBarHeight;</span><br><span class="line"><span class="comment">// 高亮的item</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nullable</span>, <span class="keyword">readonly</span>, <span class="keyword">strong</span>) <span class="built_in">NSMenuItem</span> *highlightedItem API_AVAILABLE(macos(<span class="number">10.5</span>));</span><br><span class="line"><span class="comment">// 最小宽度</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">CGFloat</span> minimumWidth API_AVAILABLE(macos(<span class="number">10.6</span>));</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">readonly</span>) <span class="built_in">NSSize</span> size API_AVAILABLE(macos(<span class="number">10.6</span>));</span><br><span class="line"><span class="comment">// 确定上下文菜单插件是否可以附加到菜单（如果用作上下文菜单）。</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">null_resettable</span>, <span class="keyword">strong</span>) <span class="built_in">NSFont</span> *font API_AVAILABLE(macos(<span class="number">10.6</span>));</span><br><span class="line"><span class="comment">// 确定菜单是否包含状态图像的列</span></span><br><span class="line"><span class="keyword">@property</span> <span class="built_in">BOOL</span> showsStateColumn API_AVAILABLE(macos(<span class="number">10.5</span>));</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-常用函数"><a href="#2-3-常用函数" class="headerlink" title="2.3 常用函数"></a>2.3 常用函数</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/27/macOS-NSMenu/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/26/macOS-NSAlert/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -320,101 +412,10 @@
   
   
   
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetsou.github.io/2020/10/23/macOS-BLE%E8%93%9D%E7%89%994-0%E5%BC%80%E5%8F%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ForgetSou">
-      <meta itemprop="description" content=" 开发">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ForgetSou | Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/23/macOS-BLE%E8%93%9D%E7%89%994-0%E5%BC%80%E5%8F%91/" class="post-title-link" itemprop="url">macOS-BLE蓝牙4.0开发</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-23 14:33:13" itemprop="dateCreated datePublished" datetime="2020-10-23T14:33:13+08:00">2020-10-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OC/" itemprop="url" rel="index"><span itemprop="name">OC</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="macOS-BLE蓝牙4-0开发"><a href="#macOS-BLE蓝牙4-0开发" class="headerlink" title="macOS-BLE蓝牙4.0开发"></a>macOS-BLE蓝牙4.0开发</h1><p>！！！<strong>中心模式</strong> ！！！</p>
-<p><code>macOS</code>的BLE程序代码和<code>iOS</code>差不多，只需要修改一些UI组件就可以把<code>iOS</code>的代码放在<code>macOS</code>上使用，下面列举移除不同之处。</p>
-<h2 id="1-蓝牙状态一直CBManagerStateUnsupported的问题"><a href="#1-蓝牙状态一直CBManagerStateUnsupported的问题" class="headerlink" title="1 蓝牙状态一直CBManagerStateUnsupported的问题"></a>1 蓝牙状态一直CBManagerStateUnsupported的问题</h2><p>在<code>Xcode</code>中打开targets中的沙盒蓝牙设置，具体路径: TARGETS - Signing &amp; Capanilities - App Sandbox - Handware - Bluetooth</p>
-<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1gjzbejhkefj30rj08swfl.jpg" alt="TARGET-Bluetooth"></p>
-<p>info.plist 里面添加<code>NSBluetoothPeripheralUsageDescription</code> Value 根据具体业务详细说明使用蓝牙的目的，以提示用户开启蓝牙权限，避免审核被拒。</p>
-<h2 id="2-代码实现"><a href="#2-代码实现" class="headerlink" title="2 代码实现"></a>2 代码实现</h2><h3 id="2-1-导入蓝牙库"><a href="#2-1-导入蓝牙库" class="headerlink" title="2.1 导入蓝牙库"></a><strong>2.1 导入蓝牙库</strong></h3><figure class="highlight objectivec"><table><tr><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;CoreBluetooth/CoreBluetooth.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/23/macOS-BLE%E8%93%9D%E7%89%994-0%E5%BC%80%E5%8F%91/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -481,7 +482,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -492,7 +493,7 @@
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -576,12 +577,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">257k</span>
+    <span title="站点总字数">258k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:54</span>
+    <span title="站点阅读时长">3:55</span>
 </div>
 
         
