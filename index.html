@@ -385,13 +385,10 @@
 
       
           <h2 id="1-效果图"><a href="#1-效果图" class="headerlink" title="1. 效果图"></a>1. 效果图</h2><p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gvusasse2wj30vg0l6wgi.jpg" alt="image-20211028094858937"></p>
-<h2 id="2-实现思路"><a href="#2-实现思路" class="headerlink" title="2. 实现思路"></a>2. 实现思路</h2><h3 id="2-1-最初想法"><a href="#2-1-最初想法" class="headerlink" title="2.1. 最初想法"></a>2.1. 最初想法</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">起初思路是在</span><br></pre></td></tr></table></figure>
-
-<p><code>MKMapView</code>上点的下方添加一个箭头View或imageView，通过两点计算角度并控制箭头的旋转实现和线重合，一顿操作下来发现角度计算的并不是特别的准确，而且在<code>MKMapview</code>旋转时，箭头也跟着旋转，无法和线重合，最终也是放弃了这个思路。</p>
-<h3 id="2-2-新思路"><a href="#2-2-新思路" class="headerlink" title="2.2. 新思路"></a>2.2. 新思路</h3><figure class="highlight"><table><tr><td class="code"><pre><span class="line">通过定义一个</span><br></pre></td></tr></table></figure>
-
-<p><code>MKPolylineRenderer</code>的子类 <code>PVMTPolylineRenderer</code>，重写父类的 <code>\- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context</code> 方法进行箭头绘制。</p>
-<h2 id="3-具体代码实现"><a href="#3-具体代码实现" class="headerlink" title="3. 具体代码实现"></a>3. 具体代码实现</h2>
+<h2 id="2-实现思路"><a href="#2-实现思路" class="headerlink" title="2. 实现思路"></a>2. 实现思路</h2><h3 id="2-1-最初想法"><a href="#2-1-最初想法" class="headerlink" title="2.1. 最初想法"></a>2.1. 最初想法</h3><p>起初思路是在 <code>MKMapView</code>上点的下方添加一个箭头<code>View</code>或<code>imageView</code>，通过两点计算角度并控制箭头的旋转实现和线重合，一顿操作下来发现角度计算的并不是特别的准确，而且在 <code>MKMapview</code>旋转时，箭头也跟着旋转，无法和线重合，最终也是放弃了这个思路。</p>
+<h3 id="2-2-新思路"><a href="#2-2-新思路" class="headerlink" title="2.2. 新思路"></a>2.2. 新思路</h3><p>通过定义一个 <code>MKPolylineRenderer</code>的子类 <code>PVMTPolylineRenderer</code>，重写父类的 <code>\- (void)drawMapRect:(MKMapRect)mapRect zoomScale:(MKZoomScale)zoomScale inContext:(CGContextRef)context</code> 方法进行箭头绘制。</p>
+<h2 id="3-具体代码实现"><a href="#3-具体代码实现" class="headerlink" title="3. 具体代码实现"></a>3. 具体代码实现</h2><p>3.1 在 <code>iOS</code>系统中，使用 <code>MKMapView</code>进行地图定位并绘制；</p>
+<p>3.2 在地图上根据多个点的经纬度绘制标注(点)，并根据这些标注控制地图画布大小和缩放比例；</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/10/28/iOS%E5%BC%80%E5%8F%91-MKMapView%E8%8B%B9%E6%9E%9C%E5%8E%9F%E7%94%9F%E5%9C%B0%E5%9B%BE%E4%B8%8A%E7%BB%98%E5%88%B6%E7%AE%AD%E5%A4%B4%E7%BA%BF-OC/#more" rel="contents">
