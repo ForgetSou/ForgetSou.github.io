@@ -1258,7 +1258,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #4aff44;
+  background: #ffd47c;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2465,7 +2465,7 @@ ul.breadcrumb li + li:last-child {
   }
 }
 .header-inner {
-  background: var(--content-bg-color);
+  background: rgba(255,255,255,0.7);
   border-radius: initial;
   box-shadow: initial;
   overflow: hidden;
@@ -2498,7 +2498,7 @@ ul.breadcrumb li + li:last-child {
   }
 }
 .content-wrap {
-  background: var(--content-bg-color);
+  background: rgba(255,255,255,0.7);
   border-radius: initial;
   box-shadow: initial;
   box-sizing: border-box;
@@ -2532,7 +2532,7 @@ ul.breadcrumb li + li:last-child {
   }
 }
 .site-brand-container {
-  background: #222;
+  background: rgba(0,0,0,0.7);
 }
 @media (max-width: 991px) {
   .site-brand-container {
@@ -2566,7 +2566,7 @@ ul.breadcrumb li + li:last-child {
 }
 .site-nav-toggle .toggle,
 .site-nav-right .toggle {
-  color: #fff;
+  color: rgba(255,255,255,0.7);
 }
 .site-nav-toggle .toggle .toggle-line,
 .site-nav-right .toggle .toggle-line {
@@ -2594,7 +2594,7 @@ ul.breadcrumb li + li:last-child {
   }
 }
 .menu .menu-item .badge {
-  background: #ccc;
+  background: rgba(255,255,255,0.7);
   border-radius: 10px;
   color: #fff;
   float: right;
@@ -2603,7 +2603,7 @@ ul.breadcrumb li + li:last-child {
   vertical-align: middle;
 }
 .sub-menu {
-  background: var(--content-bg-color);
+  background: rgba(255,255,255,0.7);
   border-bottom: 1px solid #ddd;
   margin: 0;
   padding: 6px 0;
@@ -2630,7 +2630,7 @@ ul.breadcrumb li + li:last-child {
   border-bottom-color: #fc6423;
 }
 .sidebar {
-  background: var(--body-bg-color);
+  background: rgba(255,255,255,0.7);
   box-shadow: none;
   margin-top: 100%;
   position: static;
@@ -2645,7 +2645,7 @@ ul.breadcrumb li + li:last-child {
   display: none;
 }
 .sidebar-inner {
-  background: var(--content-bg-color);
+  background: rgba(255,255,255,0.7);
   border-radius: initial;
   box-shadow: initial;
   box-sizing: border-box;
